@@ -1,14 +1,14 @@
 # Luma Mock
 
-![Luma Mock](/doc/cover.png)
+![Luma Mock](/doc/cover.jpg)
 
 ## 运行项目
 
 ### 前置操作
 
-1： 复制根目录 `.env.example` 重命名 `.env`
+1：复制根目录 `.env.example` 重命名 `.env`
 
-2: 登录 [Luma](https://lumalabs.ai/) 并获取 `access_token` 填入 `.env` 文件中的 `ACCESS_TOKEN` 字段
+2：登录 [Luma](https://lumalabs.ai/) 并获取 `access_token` 填入 `.env` 文件中的 `ACCESS_TOKEN` 字段
 
 ![Access Token](/doc/access_token.png)
 
@@ -33,7 +33,27 @@ pnpm install
 pnpm dev
 ```
 
-### 生产环境打包
+## 部署
+
+## Vercel
+
+1：`fork` 项目
+
+![Fork](/doc/deploy1.jpg)
+
+2：打开 [Vercel](https://vercel.com) 新建项目
+
+![Vercel](/doc/deploy2.jpg)
+
+3：选择命令
+
+![Script](/doc/deploy3.jpg)
+
+4：填入环境变量
+
+![Environment variable](/doc/deploy4.jpg)
+
+### 本地服务区
 
 打包
 
@@ -41,7 +61,7 @@ pnpm dev
 pnpm build
 ```
 
-生产环境运行
+运行
 
 ```shell
 pnpm preview
