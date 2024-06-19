@@ -1,13 +1,23 @@
 <script lang="ts">
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import * as Card from '$lib/components/ui/card';
-	import { Download, Loader2 } from 'lucide-svelte/icons';
-	import { Badge } from '$lib/components/ui/badge';
+	import { Download, Loader2, Copy } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
-	import { onDownload } from '$lib/utils';
+	import { onCopy, onDownload } from '$lib/utils';
 
-	let { data }: { data: Creations } = $props();
+	let { data, raw }: { data: Creations; raw?: boolean } = $props();
 
 	let videoRef = $state<HTMLVideoElement | null>(null);
+
+	let copied = $state(false);
+
+	const handleCopy = () => {
+		onCopy(data.prompt);
+		copied = true;
+		setTimeout(() => {
+			copied = false;
+		}, 1000);
+	};
 
 	const handleDownload = () => {
 		if (!data.video?.url) return;
@@ -15,18 +25,33 @@
 	};
 
 	const onVideoPlay = () => {
+		if (raw) return;
 		videoRef?.play();
 	};
 
 	const onVideoPause = () => {
+		if (raw) return;
 		videoRef?.pause();
 	};
 </script>
 
 <Card.Root>
 	<Card.Header class="p-4 pb-0">
-		<h3 class=" truncate text-left hover:text-blue-500">
-			<a href={`/creation/${data.id}`} title={data.prompt}>{data.prompt}</a>
+		<h3 class=" truncate text-left">
+			<Tooltip.Root>
+				<Tooltip.Trigger asChild>
+					{#if !raw}
+						<a class="hover:text-blue-500" href={`/creation/${data.id}`} title={data.prompt}>
+							{data.prompt}
+						</a>
+					{:else}
+						<p>{data.prompt}</p>
+					{/if}
+				</Tooltip.Trigger>
+				<Tooltip.Content>
+					<p>{data.prompt}</p>
+				</Tooltip.Content>
+			</Tooltip.Root>
 		</h3>
 	</Card.Header>
 	<Card.Content class="p-4">
@@ -37,6 +62,7 @@
 				bind:this={videoRef}
 				onmouseenter={onVideoPlay}
 				onmouseleave={onVideoPause}
+				controls={raw}
 				loop
 			>
 				<track kind="captions" src={data.video?.url} />
@@ -50,9 +76,13 @@
 			</div>
 		{/if}
 	</Card.Content>
-	<Card.Footer class="p-4 pt-0">
+	<Card.Footer class="gap-4 p-4 pt-0">
 		{#if data.state === 'completed'}
-			<Button size="sm" onclick={handleDownload}>
+			<Button variant="outline" size="sm" onclick={handleCopy}>
+				<Copy class="mr-2 h-4 w-4" />
+				{copied ? 'Copied!' : 'Copy prompt'}
+			</Button>
+			<Button variant="outline" size="sm" onclick={handleDownload}>
 				<Download class="mr-2 h-4 w-4" /> Download
 			</Button>
 		{/if}

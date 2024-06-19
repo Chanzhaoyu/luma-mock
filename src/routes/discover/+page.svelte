@@ -1,0 +1,24 @@
+<script lang="ts">
+	import Card from '$lib/components/Card.svelte';
+	import Empty from '$lib/components/Empty.svelte';
+	import { mockCreations } from '$lib/constant/mock';
+
+	let list = $state<Creations[]>(mockCreations);
+</script>
+
+<div class="py-10">
+	<div>
+		<div class="container m-auto">
+			<h2 class="mb-4 text-3xl font-bold tracking-tight">Discover</h2>
+			{#if list.length > 0}
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+					{#each list as item}
+						<Card data={item} raw />
+					{/each}
+				</div>
+			{:else}
+				<Empty />
+			{/if}
+		</div>
+	</div>
+</div>

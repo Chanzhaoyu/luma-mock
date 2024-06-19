@@ -64,3 +64,18 @@ export const onDownload = (url: string, filename: string) => {
 	a.click();
 	document.body.removeChild(a);
 };
+
+export const onCopy = (text: string) => {
+	if (navigator && 'clipboard' in navigator) {
+		navigator.clipboard.writeText(text);
+	} else {
+		const ta = document.createElement('textarea');
+		ta.value = text;
+		ta.style.position = 'absolute';
+		ta.style.opacity = '0';
+		document.body.appendChild(ta);
+		ta.select();
+		document.execCommand('copy');
+		ta.remove();
+	}
+};

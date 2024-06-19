@@ -1,14 +1,5 @@
 export const mockCreations: Creations[] = [
 	{
-		id: '6e7ac965-50dc-442f-b251-6b78009797f4',
-		prompt: 'Kongfu panda',
-		state: 'pending',
-		created_at: '2024-06-19T03:11:08.041863Z',
-		video: null,
-		liked: null,
-		estimate_wait_seconds: null
-	},
-	{
 		id: 'f5bc5441-346b-456a-a199-ea670cef0af8',
 		prompt: 'A Chinese girl wearing a Hanfu under a peach blossom tree.',
 		state: 'completed',

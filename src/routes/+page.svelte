@@ -1,8 +1,16 @@
 <script lang="ts">
-	import { Image, ArrowUpCircle, RotateCw, Loader2, Eraser } from 'lucide-svelte/icons';
+	import {
+		Image,
+		ArrowUpCircle,
+		RotateCw,
+		Loader2,
+		Eraser,
+		ExternalLink
+	} from 'lucide-svelte/icons';
 	import { toast } from 'svelte-sonner';
 	import { ideas } from '$lib/constant/idea';
 	import { isNonEmptyString } from '$lib/is';
+	import { Button } from '$lib/components/ui/button';
 	import Card from '$lib/components/Card.svelte';
 	import Empty from '$lib/components/Empty.svelte';
 	import { cn } from '$lib/utils';
@@ -158,13 +166,19 @@
 	</div>
 	<div class="mt-10">
 		<div class="container m-auto">
-			<h2 class="mb-4 text-3xl font-bold tracking-tight">Your Creations</h2>
+			<div class="flex items-center justify-between">
+				<h2 class="mb-4 text-3xl font-bold tracking-tight">Your Creations</h2>
+				<Button size="sm" variant="link" href="/discover">
+					Discover
+					<ExternalLink class="ml-2 h-4 w-4" />
+				</Button>
+			</div>
 			{#if loading}
 				<div class="flex justify-center p-4">
 					<Loader2 class="animate-spin" />
 				</div>
 			{:else if list.length > 0}
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{#each list as item}
 						<Card data={item} />
 					{/each}

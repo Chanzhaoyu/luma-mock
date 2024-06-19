@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 	import { Loader2, ArrowLeft } from 'lucide-svelte/icons';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import { Button } from '$lib/components/ui/button';
 	import { page } from '$app/stores';
 	const { id } = $page.params;
 
@@ -29,8 +29,8 @@
 
 <div class="py-10">
 	<div class="container m-auto">
-		<div class="mb-4">
-			<Button href="/">
+		<div class="mb-2">
+			<Button class="px-0" variant="link" href="/">
 				<ArrowLeft class="mr-2 h-4 w-4" />
 				Back
 			</Button>
