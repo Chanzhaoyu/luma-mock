@@ -1,0 +1,58 @@
+<script lang="ts">
+	import { toast } from 'svelte-sonner';
+	import { Loader2, ArrowLeft } from 'lucide-svelte/icons';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { page } from '$app/stores';
+	const { id } = $page.params;
+
+	let loading = $state(true);
+
+	let creation = $state<Creations>();
+
+	const fetchData = async () => {
+		if (!id) return;
+		try {
+			loading = true;
+			const res = await fetch(`/api/generations/${id}`, { method: 'GET' });
+			const data = await res.json();
+			if (!res.ok) throw new Error('Failed to fetch data');
+			creation = data?.data;
+		} catch (error: any) {
+			toast(error?.message);
+		} finally {
+			loading = false;
+		}
+	};
+
+	fetchData();
+</script>
+
+<div class="py-10">
+	<div class="container m-auto">
+		<div class="mb-4">
+			<Button href="/">
+				<ArrowLeft class="mr-2 h-4 w-4" />
+				Back
+			</Button>
+		</div>
+		{#if loading}
+			<div class="flex justify-center p-4">
+				<Loader2 class="animate-spin" />
+			</div>
+		{:else}
+			<div class="space-y-4">
+				<video
+					src={creation?.video?.url}
+					class="w-full overflow-hidden rounded-md"
+					controls
+					autoplay
+					loop
+				>
+					<track kind="captions" src={creation?.video?.url} />
+				</video>
+				<p class="text-2xl">{creation?.prompt}</p>
+				<p>{creation?.created_at}</p>
+			</div>
+		{/if}
+	</div>
+</div>
