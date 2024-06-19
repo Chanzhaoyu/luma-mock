@@ -2,7 +2,10 @@
 	import { toast } from 'svelte-sonner';
 	import { Loader2, ArrowLeft } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
+	import { timeAgo } from '$lib/utils';
 	import { page } from '$app/stores';
+	import { Badge } from '$lib/components/ui/badge';
+
 	const { id } = $page.params;
 
 	let loading = $state(true);
@@ -27,7 +30,7 @@
 	fetchData();
 </script>
 
-<div class="py-10">
+<div class="py-5">
 	<div class="container m-auto">
 		<div class="mb-2">
 			<Button class="px-0" variant="link" href="/">
@@ -50,8 +53,10 @@
 				>
 					<track kind="captions" src={creation?.video?.url} />
 				</video>
-				<p class="text-2xl">{creation?.prompt}</p>
-				<p>{creation?.created_at}</p>
+				<h2 class="text-2xl">{creation?.prompt}</h2>
+				<p>
+					<Badge>{timeAgo(creation?.created_at)}</Badge>
+				</p>
 			</div>
 		{/if}
 	</div>

@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
+import { formatDistanceToNow } from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -78,4 +79,9 @@ export const onCopy = (text: string) => {
 		document.execCommand('copy');
 		ta.remove();
 	}
+};
+
+export const timeAgo = (date?: Date | string) => {
+	if (!date) return '';
+	return formatDistanceToNow(new Date(date), { addSuffix: true });
 };

@@ -178,7 +178,7 @@
 					<Loader2 class="animate-spin" />
 				</div>
 			{:else if list.length > 0}
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each list as item}
 						<Card data={item} />
 					{/each}

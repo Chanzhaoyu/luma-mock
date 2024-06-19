@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import * as Card from '$lib/components/ui/card';
 	import { Download, Loader2, Copy } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
-	import { onCopy, onDownload } from '$lib/utils';
+	import { Badge } from '$lib/components/ui/badge';
+	import { onCopy, onDownload, timeAgo } from '$lib/utils';
 
 	let { data, raw }: { data: Creations; raw?: boolean } = $props();
 
@@ -37,21 +37,17 @@
 
 <Card.Root>
 	<Card.Header class="p-4 pb-0">
-		<h3 class=" truncate text-left">
-			<Tooltip.Root>
-				<Tooltip.Trigger asChild>
-					{#if !raw}
-						<a class="hover:text-blue-500" href={`/creation/${data.id}`} title={data.prompt}>
-							{data.prompt}
-						</a>
-					{:else}
-						<p>{data.prompt}</p>
-					{/if}
-				</Tooltip.Trigger>
-				<Tooltip.Content>
-					<p>{data.prompt}</p>
-				</Tooltip.Content>
-			</Tooltip.Root>
+		<h3 class="flex gap-1 truncate text-left">
+			<div class="min-w-0 flex-1 truncate font-bold">
+				{#if !raw}
+					<a class="hover:text-blue-500" href={`/creation/${data.id}`} title={data.prompt}>
+						{data.prompt}
+					</a>
+				{:else}
+					<p title={data.prompt}>{data.prompt}</p>
+				{/if}
+			</div>
+			<Badge variant="secondary">{timeAgo(data.created_at)}</Badge>
 		</h3>
 	</Card.Header>
 	<Card.Content class="p-4">
