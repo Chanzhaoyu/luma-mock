@@ -6,7 +6,6 @@
 	import Card from '$lib/components/Card.svelte';
 	import Empty from '$lib/components/Empty.svelte';
 	import { cn } from '$lib/utils';
-	import { mockCreations } from '$lib/constant/mock';
 
 	let prompt = $state('');
 
@@ -16,7 +15,7 @@
 
 	let generateLoading = $state(false);
 
-	let list = $state<Creations[]>(mockCreations ?? []);
+	let list = $state<Creations[]>([]);
 
 	let timer: number | null;
 
