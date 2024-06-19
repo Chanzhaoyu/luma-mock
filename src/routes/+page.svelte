@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { Image, ArrowUpCircle, RotateCw, Loader2 } from 'lucide-svelte/icons';
+	import { Image, ArrowUpCircle, RotateCw, Loader2, Eraser } from 'lucide-svelte/icons';
 	import { toast } from 'svelte-sonner';
 	import { ideas } from '$lib/constant/idea';
 	import { isNonEmptyString } from '$lib/is';
 	import Card from '$lib/components/Card.svelte';
 	import Empty from '$lib/components/Empty.svelte';
+	import { cn } from '$lib/utils';
+	import { mockCreations } from '$lib/constant/mock';
 
 	let prompt = $state('');
 
@@ -14,7 +16,7 @@
 
 	let generateLoading = $state(false);
 
-	let list = $state<Creations[]>([]);
+	let list = $state<Creations[]>(mockCreations ?? []);
 
 	let timer: number | null;
 
@@ -110,12 +112,25 @@
 					</button>
 				</div>
 				<input
-					class="h-14 w-full flex-1 resize-none overflow-hidden bg-transparent pl-16 pr-16 outline-none placeholder:truncate"
+					class={cn(
+						'h-14 w-full flex-1 resize-none overflow-hidden bg-transparent pl-16 outline-none placeholder:truncate',
+						isNonEmptyString(prompt) ? 'pr-32' : 'pr-16'
+					)}
 					placeholder="Type some text..."
 					bind:value={prompt}
 					onkeypress={handleEnter}
 				/>
-				<div class="absolute right-0 top-0 z-10">
+				<div class="absolute right-0 top-0 z-10 flex">
+					{#if isNonEmptyString(prompt)}
+						<button
+							class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-400 hover:text-zinc-700"
+							onclick={() => {
+								prompt = '';
+							}}
+						>
+							<Eraser class="h-4 w-4" />
+						</button>
+					{/if}
 					<button
 						class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-500 hover:text-zinc-700"
 						disabled={generateLoading}

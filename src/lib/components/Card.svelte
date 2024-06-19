@@ -7,34 +7,45 @@
 
 	let { data }: { data: Creations } = $props();
 
+	let videoRef = $state<HTMLVideoElement | null>(null);
+
 	const handleDownload = () => {
 		if (!data.video?.url) return;
 		onDownload(data.video.url, `${data.id}.mp4`);
+	};
+
+	const onVideoPlay = () => {
+		videoRef?.play();
+	};
+
+	const onVideoPause = () => {
+		videoRef?.pause();
 	};
 </script>
 
 <Card.Root>
 	<Card.Header class="p-4 pb-0">
-		<div class="flex items-center justify-between">
-			<h3 class="min-w-0 flex-1 truncate text-left hover:text-blue-500">
-				<a href={`/creation/${data.id}`} title={data.prompt}>{data.prompt}</a>
-			</h3>
-			<Badge>{data.state}</Badge>
-		</div>
+		<h3 class=" truncate text-left hover:text-blue-500">
+			<a href={`/creation/${data.id}`} title={data.prompt}>{data.prompt}</a>
+		</h3>
 	</Card.Header>
 	<Card.Content class="p-4">
 		{#if data.state === 'completed'}
 			<video
 				src={data.video?.url}
 				class="aspect-video min-w-full overflow-hidden rounded-md"
-				controls
+				bind:this={videoRef}
+				onmouseenter={onVideoPlay}
+				onmouseleave={onVideoPause}
+				loop
 			>
 				<track kind="captions" src={data.video?.url} />
 			</video>
 		{:else}
 			<div class="flex aspect-video overflow-hidden rounded-md bg-zinc-100">
-				<div class="m-auto">
-					<Loader2 class="h-5 w-5 animate-spin" />
+				<div class="m-auto text-center">
+					<Loader2 class="inline-block h-5 w-5 animate-spin" />
+					<p class="mt-2">{data.state}</p>
 				</div>
 			</div>
 		{/if}
