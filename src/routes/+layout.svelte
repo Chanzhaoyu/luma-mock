@@ -9,6 +9,10 @@
 	let { children, data }: { children: Snippet; data: { errorMessage?: string } } = $props();
 </script>
 
+<svelte:head>
+	<title>Luma Mock</title>
+</svelte:head>
+
 <div class="relative flex min-h-screen flex-col">
 	<Header></Header>
 	{#if isNonEmptyString(data?.errorMessage)}

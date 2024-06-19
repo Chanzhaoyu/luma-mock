@@ -6,6 +6,10 @@
 	let list = $state<Creations[]>(mockCreations);
 </script>
 
+<svelte:head>
+	<title>Discover | Luma Mock</title>
+</svelte:head>
+
 <div class="py-5">
 	<div>
 		<div class="container m-auto">

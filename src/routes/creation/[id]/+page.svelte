@@ -30,6 +30,10 @@
 	fetchData();
 </script>
 
+<svelte:head>
+	<title>{creation?.prompt} | Luma Mock</title>
+</svelte:head>
+
 <div class="py-5">
 	<div class="container m-auto">
 		<div class="mb-2">
