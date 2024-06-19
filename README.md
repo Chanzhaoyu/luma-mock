@@ -53,7 +53,7 @@ pnpm dev
 
 ![Environment variable](/doc/deploy4.jpg)
 
-### 本地服务区
+### Node 服务环境
 
 打包
 
