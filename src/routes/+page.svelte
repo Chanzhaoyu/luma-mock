@@ -55,6 +55,7 @@
 			if (!res.ok) throw new Error(data?.message ?? 'Failed to generate');
 			prompt = '';
 			toast('Successfully generated');
+			handleClearFile()
 			fetchData(false);
 		} catch (error: any) {
 			toast(error?.message);
@@ -110,7 +111,7 @@
 
 	function handleClearFile() {
 		files = null;
-		fileInput.value = '';
+		fileInput?.setAttribute('value', '');
 	}
 
 	async function onFileInputChange(event: Event) {
