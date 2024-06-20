@@ -9,8 +9,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (isNonEmptyString(config.SECRET_KEY)) {
 		if (endpoint.includes(pathname)) {
 			const secretKey = event.request.headers.get('secret-key');
-			if (!secretKey || secretKey !== config.SECRET_KEY) {
+
+			if (!secretKey) {
 				return json({ message: '没有权限，请前往设置中心填写密钥。' }, { status: 400 });
+			}
+			
+			if (secretKey !== config.SECRET_KEY) {
+				return json({ message: '密钥不正确，请重新填写。' }, { status: 400 });
 			}
 		}
 	}

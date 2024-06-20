@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Github } from 'lucide-svelte/icons';
+	import { Github, Settings } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
+	import SettingModal from './Setting.svelte';
 </script>
 
 <header
@@ -15,6 +16,7 @@
 		</div>
 		<div class="flex-1"></div>
 		<div class="flex items-center space-x-2">
+			<SettingModal />
 			<Button variant="ghost" href="https://github.com/chanzhaoyu/luma-mock" target="_blank">
 				<Github class="h-4 w-4" />
 			</Button>

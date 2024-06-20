@@ -1,3 +1,5 @@
+import { LS } from '$lib/storage';
+
 export type RequestModel = {
 	params?: object;
 	headers?: object;
@@ -25,9 +27,8 @@ const handleFetch = async (url: string, request: any, signal?: AbortSignal) => {
 				: { 'Content-type': 'application/json' })
 	};
 
-	// 如果本地保存密钥，则携带密钥
-	const secret_key = localStorage.getItem('luma_secret');
-	if (secret_key) headers['Secret-Key'] = secret_key;
+	const localSetting = LS.get('luma_setting');
+	if (localSetting?.secret_key) headers['Secret-Key'] = localSetting.secret_key;
 
 	return fetch(requestUrl, { ...requestBody, headers, signal })
 		.then(async (response) => {
