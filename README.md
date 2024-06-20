@@ -2,6 +2,8 @@
 
 使用 `Luma` 官网 `API` 运行的可部署网页项目
 
+[预览地址](https://luma-mock-git-main-chenzhaoyu02s-projects.vercel.app/)
+
 ![Luma Mock](/doc/cover.jpg)
 
 ## 环境变量
