@@ -74,11 +74,11 @@
 	</Card.Content>
 	<Card.Footer class="gap-4 p-4 pt-0">
 		{#if data.state === 'completed'}
-			<Button variant="outline" size="sm" onclick={handleCopy}>
+			<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleCopy}>
 				<Copy class="mr-2 h-4 w-4" />
 				{copied ? 'Copied!' : 'Copy prompt'}
 			</Button>
-			<Button variant="outline" size="sm" onclick={handleDownload}>
+			<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleDownload}>
 				<Download class="mr-2 h-4 w-4" /> Download
 			</Button>
 		{/if}

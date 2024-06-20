@@ -108,7 +108,7 @@
 
 <div class="py-10">
 	<div class="container m-auto">
-		<div class="mb-4">
+		<div>
 			<div class="relative flex w-full items-end justify-between rounded-[28px] bg-zinc-100">
 				<div class="absolute left-0 top-0 z-10">
 					<button
@@ -163,9 +163,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="mt-10">
-		<div class="container m-auto">
+		<div class="mt-14">
 			<div class="flex items-center justify-between">
 				<h2 class="mb-4 text-3xl font-bold tracking-tight">Your Creations</h2>
 				<Button size="sm" variant="link" href="/discover">
