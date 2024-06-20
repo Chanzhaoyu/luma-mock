@@ -1,9 +1,9 @@
 import type { RequestHandler, RequestEvent } from './$types';
 import { json } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { config } from '$lib/config';
 
-const access_token = env.ACCESS_TOKEN;
-const baseUrl = 'https://internal-api.virginia.labs.lumalabs.ai/api/photon/v1/generations/';
+const access_token = config.ACCESS_TOKEN;
+const baseUrl = config.API_URL + '/api/photon/v1/generations/';
 
 export const POST = (async ({ request }: RequestEvent) => {
 	if (!access_token) return json({ message: 'Missing access token' }, { status: 400 });

@@ -12,6 +12,13 @@
 
 ![Access Token](/doc/access_token.png)
 
+### 环境变量
+
+| 变量名称       | 是否必填 | 描述         |
+| -------------- | -------- | ------------ |
+| `ACCESS_TOKEN` | 必填     | access_token |
+| `API_URL`      | 可选     | 接口代理     |
+
 ### 开发环境运行
 
 1: 安装 `pnpm`

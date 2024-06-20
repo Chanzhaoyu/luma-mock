@@ -1,10 +1,9 @@
 import type { RequestHandler, RequestEvent } from './$types';
 import { json } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { config } from '$lib/config';
 
-const access_token = env.ACCESS_TOKEN;
-const baseUrl =
-	'https://internal-api.virginia.labs.lumalabs.ai/api/photon/v1/generations/file_upload?file_type=image&filename=file.jpg';
+const access_token = config.ACCESS_TOKEN;
+const baseUrl = config.API_URL + '/api/photon/v1/generations/file_upload';
 
 export const POST = (async ({ request }: RequestEvent) => {
 	if (!access_token) return json({ message: 'Missing access token' }, { status: 400 });
@@ -20,7 +19,7 @@ export const POST = (async ({ request }: RequestEvent) => {
 	formData.append('file', file);
 
 	try {
-		const res = await fetch(baseUrl, {
+		const res = await fetch(baseUrl + '?file_type=image&filename=file.jpg', {
 			method: 'POST',
 			headers: {
 				Cookie: `access_token=${access_token}`

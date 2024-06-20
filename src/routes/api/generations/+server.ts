@@ -1,9 +1,9 @@
 import type { RequestHandler, RequestEvent } from './$types';
 import { json } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { config } from '$lib/config';
 
-const access_token = env.ACCESS_TOKEN;
-const baseUrl = 'https://internal-api.virginia.labs.lumalabs.ai/api/photon/v1/user/generations/';
+const access_token = config.ACCESS_TOKEN;
+const baseUrl = config.API_URL + '/api/photon/v1/user/generations/';
 
 export const GET = (async (req: RequestEvent) => {
 	if (!access_token) return json({ message: 'Missing access token' }, { status: 400 });
@@ -22,7 +22,7 @@ export const GET = (async (req: RequestEvent) => {
 				Cookie: `access_token=${access_token}`
 			}
 		});
-		
+
 		if (!res.ok) {
 			const error = await res.json();
 			throw new Error(error?.detail?.reason ?? error?.detail ?? 'Failed to fetch data');
