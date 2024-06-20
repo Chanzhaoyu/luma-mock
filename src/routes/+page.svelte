@@ -56,7 +56,7 @@
 		if (!isNonEmptyString(prompt) || loading) return;
 		try {
 			generateLoading = true;
-			const payload: Record<string, string> = { prompt };
+			const payload: Record<string, string> = { prompt: prompt.trim() };
 			if (uploadFile.url) payload['image_url'] = uploadFile.url;
 			await post('/api/generations/create', { body: payload });
 			prompt = '';
