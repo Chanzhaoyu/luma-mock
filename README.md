@@ -24,6 +24,8 @@
 
 ### 开发环境运行
 
+务必使用 `Node>20` 以上版本
+
 1: 安装 `pnpm`
 
 ```shell
@@ -42,6 +44,8 @@ pnpm install
 ```shell
 pnpm dev
 ```
+
+P.S. 开发环境第一次运行可能出现类型错误，请运行 `pnpm prepare` 后再运行 `pnpm dev`
 
 ## 部署
 
