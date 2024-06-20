@@ -14,3 +14,9 @@ interface Video {
 	height: number;
 	thumbnail: string | null;
 }
+
+interface UploadFile {
+	id: string;
+	presigned_url: string;
+	public_url: string;
+}

@@ -3,36 +3,29 @@ import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 const access_token = env.ACCESS_TOKEN;
-const baseUrl = 'https://internal-api.virginia.labs.lumalabs.ai/api/photon/v1/generations/';
+const baseUrl =
+	'https://internal-api.virginia.labs.lumalabs.ai/api/photon/v1/generations/file_upload?file_type=image&filename=file.jpg';
 
 export const POST = (async ({ request }: RequestEvent) => {
 	if (!access_token) return json({ message: 'Missing access token' }, { status: 400 });
+
+	const data = await request.formData();
+	const file = data.get('file');
+
+	if (!file) {
+		return json({ message: 'No file provided' }, { status: 400 });
+	}
+
+	const formData = new FormData();
+	formData.append('file', file);
+
 	try {
-		const { prompt, image_url } = await request.json();
-
-		if (!prompt) return json({ message: 'Missing required parameter: prompt' }, { status: 400 });
-
-		const headers = {
-			Cookie: `access_token=${access_token}`,
-			Origin: 'https://lumalabs.ai',
-			Referer: 'https://lumalabs.ai',
-			'Content-type': 'application/json'
-		};
-
-		const payload: Record<string, any> = {
-			user_prompt: prompt,
-			aspect_ratio: '16:9',
-			expand_prompt: true
-		};
-
-		if (image_url) {
-			payload['image_url'] = image_url;
-		}
-
 		const res = await fetch(baseUrl, {
 			method: 'POST',
-			headers,
-			body: JSON.stringify(payload)
+			headers: {
+				Cookie: `access_token=${access_token}`
+			},
+			body: formData
 		});
 
 		if (!res.ok) {
@@ -40,7 +33,7 @@ export const POST = (async ({ request }: RequestEvent) => {
 			throw new Error(error?.detail?.reason ?? error?.detail ?? 'Failed to fetch data');
 		}
 		const data = await res.json();
-		return json({ message: 'Success', data });
+		return json({ data: data }, { status: 200 });
 	} catch (error: any) {
 		return json({ message: error?.message || 'Internal Server Error' }, { status: 500 });
 	}
