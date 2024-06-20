@@ -1,6 +1,15 @@
 # Luma Mock
 
+使用 `Luma` 官网 `API` 运行的可部署网页项目
+
 ![Luma Mock](/doc/cover.jpg)
+
+## 环境变量
+
+| 变量名称       | 是否必填 | 描述         |
+| -------------- | -------- | ------------ |
+| `ACCESS_TOKEN` | 必填     | access_token |
+| `API_URL`      | 可选     | 接口代理     |
 
 ## 运行项目
 
@@ -11,13 +20,6 @@
 2：登录 [Luma](https://lumalabs.ai/) 并获取 `access_token` 填入 `.env` 文件中的 `ACCESS_TOKEN` 字段
 
 ![Access Token](/doc/access_token.png)
-
-### 环境变量
-
-| 变量名称       | 是否必填 | 描述         |
-| -------------- | -------- | ------------ |
-| `ACCESS_TOKEN` | 必填     | access_token |
-| `API_URL`      | 可选     | 接口代理     |
 
 ### 开发环境运行
 
