@@ -38,6 +38,6 @@ export const POST = (async ({ request }: RequestEvent) => {
 		const data = await res.json();
 		return json({ message: 'Success', data });
 	} catch (error: any) {
-		return json({ message: error?.message || 'Inter Server Error' }, { status: 500 });
+		return json({ message: error?.message || 'Internal Server Error' }, { status: 500 });
 	}
 }) satisfies RequestHandler;

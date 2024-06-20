@@ -31,6 +31,6 @@ export const GET = (async (req: RequestEvent) => {
 		const data = await res.json();
 		return json({ data }, { status: 200 });
 	} catch (error: any) {
-		return json({ message: error?.message || 'Inter Server Error' }, { status: 500 });
+		return json({ message: error?.message || 'Internal Server Error' }, { status: 500 });
 	}
 }) satisfies RequestHandler;
