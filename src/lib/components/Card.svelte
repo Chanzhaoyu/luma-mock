@@ -37,17 +37,19 @@
 
 <Card.Root>
 	<Card.Header class="p-4 pb-0">
-		<h3 class="flex gap-1 truncate text-left">
-			<div class="min-w-0 flex-1 truncate font-bold">
-				{#if !raw}
-					<a class="hover:text-blue-500" href={`/creation/${data.id}`} title={data.prompt}>
-						{data.prompt}
-					</a>
-				{:else}
-					<p title={data.prompt}>{data.prompt}</p>
-				{/if}
-			</div>
-			<Badge variant="secondary">{timeAgo(data.created_at)}</Badge>
+		<h3 class="flex gap-1 text-left">
+			{#if !raw}
+				<a
+					class="min-w-0 flex-1 truncate hover:text-blue-500"
+					href={`/creation/${data.id}`}
+					title={data.prompt}
+				>
+					{data.prompt}
+				</a>
+				<Badge variant="secondary">{timeAgo(data.created_at)}</Badge>
+			{:else}
+				<p class="min-w-0 flex-1 truncate" title={data.prompt}>{data.prompt}</p>
+			{/if}
 		</h3>
 	</Card.Header>
 	<Card.Content class="p-4">
