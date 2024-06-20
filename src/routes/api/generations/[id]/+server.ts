@@ -21,7 +21,7 @@ export const GET = (async ({ params }: RequestEvent) => {
 
 		if (!res.ok) {
 			const error = await res.json();
-			throw new Error(error?.detail?.reason ?? 'Failed to fetch data');
+			throw new Error(error?.detail?.reason ?? error?.detail ?? 'Failed to fetch data');
 		}
 
 		const data = await res.json();
