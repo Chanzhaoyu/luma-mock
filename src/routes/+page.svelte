@@ -57,7 +57,7 @@
 		try {
 			generateLoading = true;
 			const payload: Record<string, string> = { prompt: prompt.trim() };
-			if (uploadFile.url) payload['image_url'] = uploadFile.url;
+			if (uploadFile.url) payload['image'] = uploadFile.url;
 			await post('/api/generations/create', { body: payload });
 			prompt = '';
 			toast('Successfully generated');
@@ -81,7 +81,7 @@
 		try {
 			clearTimer();
 			if (isLoading) loading = true;
-			const res = await get('/api/generations');
+			const res = await get('/api/generations?limit=30');
 			list = res?.data ?? [];
 			checkNoCompletion();
 		} catch (error: any) {

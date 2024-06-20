@@ -19,6 +19,10 @@
 		if (localSetting) setting = { ...localSetting };
 	}
 
+	function handleOpen() {
+		open = true;
+	}
+
 	function handleSave() {
 		LS.set('luma_setting', setting);
 		open = false;
@@ -26,7 +30,7 @@
 	}
 </script>
 
-<Button variant="ghost" onclick={() => (open = true)}>
+<Button variant="ghost" onclick={handleOpen}>
 	<Settings class="h-4 w-4" />
 </Button>
 

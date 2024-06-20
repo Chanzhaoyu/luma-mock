@@ -8,7 +8,7 @@ const baseUrl = config.PROXY_URL + '/api/photon/v1/generations/';
 export const POST = (async ({ request }: RequestEvent) => {
 	if (!access_token) return json({ message: '缺少必要参数：access_token' }, { status: 400 });
 	try {
-		const { prompt, image_url } = await request.json();
+		const { prompt, image } = await request.json();
 
 		if (!prompt) return json({ message: '缺少必要参数：prompt' }, { status: 400 });
 
@@ -22,9 +22,10 @@ export const POST = (async ({ request }: RequestEvent) => {
 		const payload: Record<string, any> = {
 			user_prompt: prompt,
 			aspect_ratio: '16:9',
-			expand_prompt: true,
-			image_url: image_url
+			expand_prompt: true
 		};
+
+		if (image) payload.image_url = image;
 
 		const res = await fetch(baseUrl, {
 			method: 'POST',
