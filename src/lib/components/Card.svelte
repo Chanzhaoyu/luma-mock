@@ -23,16 +23,6 @@
 		if (!data.video?.url) return;
 		onDownload(data.video.url, `${data.id}.mp4`);
 	};
-
-	const onVideoPlay = () => {
-		if (raw) return;
-		videoRef?.play();
-	};
-
-	const onVideoPause = () => {
-		if (raw) return;
-		videoRef?.pause();
-	};
 </script>
 
 <Card.Root>
@@ -58,9 +48,7 @@
 				src={data.video?.url}
 				class="aspect-video min-w-full overflow-hidden rounded-md"
 				bind:this={videoRef}
-				onmouseenter={onVideoPlay}
-				onmouseleave={onVideoPause}
-				controls={raw}
+				controls
 				loop
 			>
 				<track kind="captions" src={data.video?.url} />
@@ -78,10 +66,10 @@
 		{#if data.state === 'completed'}
 			<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleCopy}>
 				<Copy class="mr-2 h-4 w-4" />
-				{copied ? 'Copied!' : 'Copy prompt'}
+				{copied ? '已复制' : '复制提示词'}
 			</Button>
 			<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleDownload}>
-				<Download class="mr-2 h-4 w-4" /> Download
+				<Download class="mr-2 h-4 w-4" /> 下载
 			</Button>
 		{/if}
 	</Card.Footer>

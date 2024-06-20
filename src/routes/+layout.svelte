@@ -1,12 +1,17 @@
 <script lang="ts">
 	import '../app.css';
+
 	import type { Snippet } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import Header from '$lib/components/Header.svelte';
 	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
-	import { isNonEmptyString } from '$lib/is';
+	import { browser } from '$app/environment';
 
-	let { children, data }: { children: Snippet; data: { errorMessage?: string } } = $props();
+	const { children, data }: { children: Snippet; data: { prepare: Prepare } } = $props();
+
+	if (browser) {
+		localStorage.setItem('luma_prepare', JSON.stringify(data.prepare));
+	}
 </script>
 
 <svelte:head>
@@ -15,8 +20,8 @@
 
 <div class="relative flex min-h-screen flex-col">
 	<Header></Header>
-	{#if isNonEmptyString(data?.errorMessage)}
-		<ErrorBanner message={data.errorMessage} />
+	{#if !data.prepare.ACCESS_TOKEN}
+		<ErrorBanner message="ACCESS_TOKEN is not set in the environment variables" />
 	{/if}
 	{@render children()}
 	<Toaster theme="light" />

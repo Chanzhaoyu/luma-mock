@@ -39,7 +39,7 @@
 		<div class="mb-2">
 			<Button class="px-0" variant="link" href="/">
 				<ArrowLeft class="mr-2 h-4 w-4" />
-				Back
+				返回
 			</Button>
 		</div>
 		{#if loading}

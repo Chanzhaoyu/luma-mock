@@ -3,18 +3,20 @@ import { env } from '$env/dynamic/private';
 const defaultAPIUrl = 'https://internal-api.virginia.labs.lumalabs.ai';
 
 export type Config = {
-	ACCESS_TOKEN: string | null;
-	API_URL: string;
+	ACCESS_TOKEN?: string;
+	PROXY_URL?: string;
+	SECRET_KEY?: string;
 };
 
 export const config: Config = {
 	ACCESS_TOKEN: getEnvVariable('ACCESS_TOKEN'),
-	API_URL: getEnvVariable('API_URL') || defaultAPIUrl
+	PROXY_URL: getEnvVariable('PROXY_URL') || defaultAPIUrl,
+	SECRET_KEY: getEnvVariable('SECRET_KEY')
 };
 
-export function getEnvVariable(key: string): string | null {
+export function getEnvVariable(key: string): string | undefined {
 	const value = env[key];
-	if (value === undefined) return null;
+	if (value === undefined) return undefined;
 	return value;
 }
 

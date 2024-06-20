@@ -3,10 +3,10 @@ import { json } from '@sveltejs/kit';
 import { config } from '$lib/config';
 
 const access_token = config.ACCESS_TOKEN;
-const baseUrl = config.API_URL + '/api/photon/v1/user/generations/';
+const baseUrl = config.PROXY_URL + '/api/photon/v1/user/generations/';
 
 export const GET = (async (req: RequestEvent) => {
-	if (!access_token) return json({ message: 'Missing access token' }, { status: 400 });
+	if (!access_token) return json({ message: '缺少必要参数：access_token' }, { status: 400 });
 
 	const offset = req.url.searchParams.get('offset') || '0';
 	const limit = req.url.searchParams.get('limit') || '10';
@@ -25,7 +25,7 @@ export const GET = (async (req: RequestEvent) => {
 
 		if (!res.ok) {
 			const error = await res.json();
-			throw new Error(error?.detail?.reason ?? error?.detail ?? 'Failed to fetch data');
+			throw new Error(error?.detail?.reason ?? error?.detail ?? 'Failed to fetch');
 		}
 
 		const data = await res.json();

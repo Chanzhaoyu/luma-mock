@@ -15,6 +15,21 @@
 	import Card from '$lib/components/Card.svelte';
 	import Empty from '$lib/components/Empty.svelte';
 	import { cn } from '$lib/utils';
+	import { post, get } from '$lib/request';
+
+	interface UploadFileProps {
+		process: boolean;
+		error: boolean;
+		url: string | null;
+		blob: string | null;
+	}
+
+	const defaultUploadFile = (): UploadFileProps => ({
+		process: false,
+		error: false,
+		url: null,
+		blob: null
+	});
 
 	let prompt = $state('');
 
@@ -22,11 +37,9 @@
 
 	let loading = $state(true);
 
-	let uploadLoading = $state(false);
-
 	let generateLoading = $state(false);
 
-	let files = $state<UploadFile | null>(null);
+	let uploadFile = $state<UploadFileProps>(defaultUploadFile());
 
 	let list = $state<Creations[]>([]);
 
@@ -36,7 +49,6 @@
 
 	$effect(() => {
 		fetchData();
-
 		return () => clearTimer();
 	});
 
@@ -45,17 +57,11 @@
 		try {
 			generateLoading = true;
 			const payload: Record<string, string> = { prompt };
-			if (files) payload['image_url'] = files?.public_url;
-			const res = await fetch('/api/generations/create', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload)
-			});
-			const data = await res.json();
-			if (!res.ok) throw new Error(data?.message ?? 'Failed to generate');
+			if (uploadFile.url) payload['image_url'] = uploadFile.url;
+			await post('/api/generations/create', { body: payload });
 			prompt = '';
 			toast('Successfully generated');
-			handleClearFile()
+			handleClearFile();
 			fetchData(false);
 		} catch (error: any) {
 			toast(error?.message);
@@ -75,10 +81,8 @@
 		try {
 			clearTimer();
 			if (isLoading) loading = true;
-			const res = await fetch('/api/generations', { method: 'GET' });
-			const data = await res.json();
-			if (!res.ok) throw new Error(data?.message ?? 'Failed to generate');
-			list = data?.data ?? [];
+			const res = await get('/api/generations');
+			list = res?.data ?? [];
 			checkNoCompletion();
 		} catch (error: any) {
 			toast(error?.message);
@@ -110,29 +114,29 @@
 	}
 
 	function handleClearFile() {
-		files = null;
+		uploadFile = defaultUploadFile();
 		fileInput?.setAttribute('value', '');
 	}
 
 	async function onFileInputChange(event: Event) {
 		const file = (event.target as HTMLInputElement).files?.[0];
 		if (!file) return;
+
+		const reader = new FileReader();
+		reader.onload = (e) => (uploadFile.blob = e.target?.result as string);
+		reader.readAsDataURL(file);
+
 		const formData = new FormData();
 		formData.append('file', file);
 
 		try {
-			uploadLoading = true;
-			const res = await fetch('/api/generations/upload', {
-				method: 'POST',
-				body: formData
-			});
-			const data = await res.json();
-			if (!res.ok) throw new Error(data?.message ?? 'Failed to generate');
-			files = data?.data ?? null;
+			uploadFile.process = true;
+			const res = await post<{ data: UploadFile }>('/api/generations/upload', { body: formData });
+			uploadFile.url = res.data.public_url;
 		} catch (error: any) {
 			toast(error?.message);
 		} finally {
-			uploadLoading = false;
+			uploadFile.process = false;
 		}
 	}
 
@@ -149,13 +153,14 @@
 			<div
 				class={cn(
 					'relative flex w-full items-end justify-between rounded-[28px] bg-zinc-100',
-					files ? 'pt-10' : ''
+					uploadFile.blob ? 'pt-10' : ''
 				)}
 			>
 				<div class="absolute bottom-0 left-0 z-10">
 					<button
 						tabindex="0"
 						class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-500 hover:text-zinc-700"
+						disabled={uploadFile.process}
 						onclick={handleUpload}
 					>
 						<input
@@ -165,11 +170,7 @@
 							bind:this={fileInput}
 							onchange={onFileInputChange}
 						/>
-						{#if uploadLoading}
-							<Loader2 class="h-5 w-5 animate-spin" />
-						{:else}
-							<Image class="h-5 w-5" />
-						{/if}
+						<Image class="h-5 w-5" />
 					</button>
 				</div>
 				<input
@@ -177,7 +178,7 @@
 						'h-14 w-full flex-1 resize-none overflow-hidden bg-transparent pl-16 outline-none placeholder:truncate',
 						isNonEmptyString(prompt) ? 'pr-32' : 'pr-16'
 					)}
-					placeholder="Type some text or add an image..."
+					placeholder="输入文字或添加图片..."
 					bind:value={prompt}
 					onkeypress={handleEnter}
 				/>
@@ -204,33 +205,47 @@
 						{/if}
 					</button>
 				</div>
-				{#if files}
+				{#if uploadFile.blob}
 					<div
-						class="group absolute left-[25px] top-[-55px] aspect-[1/1.3] h-[100px]"
+						class="group absolute left-[25px] top-[-55px] aspect-[1/1.3] h-[100px] overflow-hidden rounded-xl"
 						style="transform: translateY(0px) scale(1) rotate(-3deg) translateZ(0px); opacity: 1;"
 					>
 						<button
-							class="absolute right-0 top-0 flex h-5 w-5 rounded-full bg-black opacity-0 transition-opacity group-hover:opacity-100"
+							class="absolute right-0 top-0 z-20 flex h-5 w-5 rounded-full bg-black opacity-0 transition-opacity group-hover:opacity-100"
 							style="transform: translateX(-3px) translateY(3px) scale(1) translateZ(0px);"
 							onclick={handleClearFile}
 						>
 							<X class="m-auto h-4 w-4 text-white" />
 						</button>
 						<img
-							class="size-full rounded-xl bg-slate-50 object-cover"
-							src={files?.public_url}
+							class="size-full bg-zinc-200 object-cover"
+							src={uploadFile?.blob}
 							alt="attachment"
 							style="box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 12px 0px;"
 						/>
+						{#if uploadFile.process}
+							<div
+								class="absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black/15 backdrop-blur-md"
+							>
+								<Loader2 class="h-4 w-4 animate-spin text-white" />
+							</div>
+						{/if}
+						{#if uploadFile.error}
+							<div
+								class="absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black/15 backdrop-blur-md"
+							>
+								<span class="text-xs text-white">失败</span>
+							</div>
+						{/if}
 					</div>
 				{/if}
 			</div>
 			<div class="mt-2 flex gap-2 px-5 text-zinc-400">
-				<button class="hover:text-zinc-700" onclick={handleRandomIdea}>
+				<button class="hover:text-zinc-700" onclick={handleRandomIdea} title="随机">
 					<RotateCw class="h-4 w-4" />
 				</button>
 				<div class="flex items-center gap-1 truncate text-sm">
-					<b>Idea:</b>
+					<b>灵感:</b>
 					<button class="flex-1 hover:text-zinc-700" onclick={() => (prompt = idea)}>
 						{idea}
 					</button>
@@ -239,9 +254,9 @@
 		</div>
 		<div class="">
 			<div class="flex items-center justify-between">
-				<h2 class="mb-4 text-3xl font-bold tracking-tight">Your Creations</h2>
+				<h2 class="mb-4 text-3xl font-bold tracking-tight">我的创造</h2>
 				<Button size="sm" variant="link" href="/discover">
-					Discover
+					发现
 					<ExternalLink class="ml-2 h-4 w-4" />
 				</Button>
 			</div>

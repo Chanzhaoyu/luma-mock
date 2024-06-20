@@ -1,10 +1,12 @@
-import { env } from '$env/dynamic/private';
-import { isNonEmptyString } from '$lib/is';
 import type { LayoutServerLoad } from './$types';
+import { config } from '$lib/config';
+import { isNonEmptyString } from '$lib/is';
 
 export const load: LayoutServerLoad = async () => {
-	if (!isNonEmptyString(env.ACCESS_TOKEN)) {
-		return { errorMessage: 'ACCESS_TOKEN is not set in the environment variables' };
-	}
-	return {};
+	return {
+		prepare: {
+			ACCESS_TOKEN: !!isNonEmptyString(config.ACCESS_TOKEN),
+			SECRET_KEY: !!isNonEmptyString(config.SECRET_KEY)
+		}
+	};
 };

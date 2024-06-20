@@ -1,18 +1,21 @@
+interface Prepare {
+	ACCESS_TOKEN: boolean;
+	SECRET_KEY: boolean;
+}
+
 interface Creations {
 	id: string;
 	prompt: string;
 	state: string;
 	created_at: string;
-	video: Video | null;
+	video: {
+		url: string;
+		width: number;
+		height: number;
+		thumbnail: string | null;
+	} | null;
 	liked: string | null;
 	estimate_wait_seconds: string | null;
-}
-
-interface Video {
-	url: string;
-	width: number;
-	height: number;
-	thumbnail: string | null;
 }
 
 interface UploadFile {
