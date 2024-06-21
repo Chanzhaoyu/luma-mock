@@ -24,12 +24,19 @@
 </script>
 
 <div class="flex flex-1 gap-2 overflow-hidden">
-	<button class="hover:text-zinc-700" title="随机" onclick={handleRandom}>
+	<button
+		class="hover:text-slate-700 dark:hover:text-slate-200"
+		title="随机"
+		onclick={handleRandom}
+	>
 		<RotateCw class="h-4 w-4" />
 	</button>
 	<div class="flex min-w-0 items-center gap-1 text-sm">
 		<b>灵感:</b>
-		<button class="flex-1 truncate hover:text-zinc-700" onclick={handleClick}>
+		<button
+			class="flex-1 truncate hover:text-slate-700 dark:hover:text-slate-200"
+			onclick={handleClick}
+		>
 			{idea}
 		</button>
 	</div>

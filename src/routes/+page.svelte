@@ -142,7 +142,7 @@
 {#snippet prefix()}
 	<button
 		tabindex="0"
-		class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-500 hover:text-zinc-700"
+		class="flex h-14 w-14 cursor-pointer items-center justify-center text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
 		disabled={uploadFile.process}
 		onclick={handleUpload}
 	>

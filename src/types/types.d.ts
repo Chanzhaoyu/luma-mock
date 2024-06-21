@@ -1,3 +1,5 @@
+type Theme = 'system' | 'light' | 'dark';
+
 interface Prepare {
 	ACCESS_TOKEN: boolean;
 	SECRET_KEY: boolean;
