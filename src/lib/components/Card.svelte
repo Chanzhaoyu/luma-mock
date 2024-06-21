@@ -59,7 +59,7 @@
 	</Card.Content>
 	<Card.Footer class="gap-4 p-4 pt-0">
 		{#if data.state === 'completed'}
-			<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleExtend}>
+			<Button class="hidden rounded-[20px]" variant="outline" size="sm" onclick={handleExtend}>
 				<Blend class="mr-2 h-4 w-4" /> 扩展
 			</Button>
 			<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleDownload}>
