@@ -1,33 +1,23 @@
 <script lang="ts">
-	import {
-		Image,
-		ArrowUpCircle,
-		RotateCw,
-		Loader2,
-		Eraser,
-		ExternalLink,
-		X
-	} from 'lucide-svelte/icons';
+	import { Image, Loader2, ExternalLink, X } from 'lucide-svelte/icons';
 	import { toast } from 'svelte-sonner';
-	import { ideas } from '$lib/constant/idea';
 	import { isNonEmptyString } from '$lib/is';
+	import { cn } from '$lib/utils';
+	import { post, get } from '$lib/request';
+	import { ideas } from '$lib/constant/idea';
+
 	import { Button } from '$lib/components/ui/button';
 	import Card from '$lib/components/Card.svelte';
 	import Empty from '$lib/components/Empty.svelte';
-	import { cn } from '$lib/utils';
-	import { post, get } from '$lib/request';
+	import IdeaComponent from '$lib/components/Idea.svelte';
+	import UsageComponent from '$lib/components/Usage.svelte';
+	import Input from '$lib/components/Input.svelte';
 
 	interface UploadFileProps {
 		process: boolean;
 		error: boolean;
 		url: string | null;
 		blob: string | null;
-	}
-
-	interface Usage {
-		available: number;
-		capacity: number;
-		consumed: number;
 	}
 
 	const defaultUploadFile = (): UploadFileProps => ({
@@ -49,18 +39,11 @@
 
 	let list = $state<Creations[]>([]);
 
-	let usage = $state<Usage | null>();
-
 	let timer: number | null;
 
 	let fileInput: HTMLInputElement;
 
-	$effect(() => {
-		fetchUsage();
-		fetchList();
-
-		return () => clearTimer();
-	});
+	let usageRef: ReturnType<typeof UsageComponent>;
 
 	async function handleGenerate() {
 		if (!isNonEmptyString(prompt) || loading) return;
@@ -73,7 +56,7 @@
 			toast('Successfully generated');
 			handleClearFile();
 			fetchList(false);
-			fetchUsage();
+			usageRef?.fetchUsage();
 		} catch (error: any) {
 			toast(error?.message);
 		} finally {
@@ -95,17 +78,9 @@
 			const res = await get('/api/generations?limit=10');
 			list = res?.data ?? [];
 			checkNoCompletion();
-		} catch (error: any) {
-			toast(error?.message);
 		} finally {
 			loading = false;
 		}
-	}
-
-	function fetchUsage() {
-		get('/api/generations/usage').then((res) => {
-			usage = res.data;
-		});
 	}
 
 	async function clearTimer() {
@@ -157,71 +132,44 @@
 		}
 	}
 
-	function handleRandomIdea() {
-		const total = ideas.length;
-		const random = Math.floor(Math.random() * total);
-		idea = ideas[random];
-	}
+	$effect(() => {
+		fetchList();
+
+		return () => clearTimer();
+	});
 </script>
+
+{#snippet prefix()}
+	<button
+		tabindex="0"
+		class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-500 hover:text-zinc-700"
+		disabled={uploadFile.process}
+		onclick={handleUpload}
+	>
+		<input
+			accept="image/*"
+			class="hidden"
+			type="file"
+			bind:this={fileInput}
+			onchange={onFileInputChange}
+		/>
+		<Image class="h-5 w-5" />
+	</button>
+{/snippet}
 
 <div class="py-10">
 	<div class="container m-auto">
 		<div class="pb-20 pt-10">
-			<div
-				class={cn(
-					'relative flex w-full items-end justify-between rounded-[28px] bg-zinc-100',
-					uploadFile.blob ? 'pt-10' : ''
-				)}
-			>
-				<div class="absolute bottom-0 left-0 z-10">
-					<button
-						tabindex="0"
-						class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-500 hover:text-zinc-700"
-						disabled={uploadFile.process}
-						onclick={handleUpload}
-					>
-						<input
-							accept="image/*"
-							class="hidden"
-							type="file"
-							bind:this={fileInput}
-							onchange={onFileInputChange}
-						/>
-						<Image class="h-5 w-5" />
-					</button>
-				</div>
-				<input
-					class={cn(
-						'h-14 w-full flex-1 resize-none overflow-hidden bg-transparent pl-16 outline-none placeholder:truncate',
-						isNonEmptyString(prompt) ? 'pr-32' : 'pr-16'
-					)}
-					placeholder="输入文字或添加图片..."
+			<div class="relative">
+				<Input
 					bind:value={prompt}
+					className={cn('pl-16', uploadFile.blob && 'pt-10')}
+					loading={generateLoading}
+					placeholder="输入文字或添加图片..."
 					onkeypress={handleEnter}
+					onSubmit={handleGenerate}
+					{prefix}
 				/>
-				<div class="absolute bottom-0 right-0 z-10 flex">
-					{#if isNonEmptyString(prompt)}
-						<button
-							class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-400 hover:text-zinc-700"
-							onclick={() => {
-								prompt = '';
-							}}
-						>
-							<Eraser class="h-4 w-4" />
-						</button>
-					{/if}
-					<button
-						class="flex h-14 w-14 cursor-pointer items-center justify-center text-zinc-500 hover:text-zinc-700"
-						disabled={generateLoading}
-						onclick={handleGenerate}
-					>
-						{#if generateLoading}
-							<Loader2 class="h-5 w-5 animate-spin" />
-						{:else}
-							<ArrowUpCircle class="h-5 w-5" />
-						{/if}
-					</button>
-				</div>
 				{#if uploadFile.blob}
 					<div
 						class="group absolute left-[25px] top-[-55px] aspect-[1/1.3] h-[100px] overflow-hidden rounded-xl"
@@ -257,27 +205,12 @@
 					</div>
 				{/if}
 			</div>
-			<div class="mt-2 flex gap-2 px-5 text-zinc-400">
-				<div class="flex flex-1 gap-2 overflow-hidden">
-					<button class="hover:text-zinc-700" onclick={handleRandomIdea} title="随机">
-						<RotateCw class="h-4 w-4" />
-					</button>
-					<div class="flex min-w-0 items-center gap-1 text-sm">
-						<b>灵感:</b>
-						<button class="flex-1 truncate hover:text-zinc-700" onclick={() => (prompt = idea)}>
-							{idea}
-						</button>
-					</div>
-				</div>
-				{#if usage}
-					<div class="flex items-center gap-1">
-						<span>已用:</span>
-						<span>{usage?.available}/{usage?.capacity}</span>
-					</div>
-				{/if}
+			<div class="mt-2 flex items-center gap-4 px-5 text-zinc-400">
+				<IdeaComponent onClick={() => (prompt = idea)} />
+				<UsageComponent bind:this={usageRef} />
 			</div>
 		</div>
-		<div class="">
+		<div>
 			<div class="flex items-center justify-between">
 				<h2 class="mb-4 text-3xl font-bold tracking-tight">我的创造</h2>
 				<Button size="sm" variant="link" href="/discover">

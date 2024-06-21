@@ -1,4 +1,5 @@
 import { LS } from '$lib/storage';
+import { browser } from '$app/environment';
 
 export type RequestModel = {
 	params?: object;
@@ -27,8 +28,10 @@ const handleFetch = async (url: string, request: any, signal?: AbortSignal) => {
 				: { 'Content-type': 'application/json' })
 	};
 
-	const localSetting = LS.get('luma_setting');
-	if (localSetting?.secret_key) headers['Secret-Key'] = localSetting.secret_key;
+	if (browser) {
+		const localSetting = LS.get('luma_setting');
+		if (localSetting?.secret_key) headers['Secret-Key'] = localSetting.secret_key;
+	}
 
 	return fetch(requestUrl, { ...requestBody, headers, signal })
 		.then(async (response) => {
