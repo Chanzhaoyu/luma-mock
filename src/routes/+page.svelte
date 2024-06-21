@@ -24,6 +24,12 @@
 		blob: string | null;
 	}
 
+	interface Usage {
+		available: number;
+		capacity: number;
+		consumed: number;
+	}
+
 	const defaultUploadFile = (): UploadFileProps => ({
 		process: false,
 		error: false,
@@ -43,12 +49,16 @@
 
 	let list = $state<Creations[]>([]);
 
+	let usage = $state<Usage | null>();
+
 	let timer: number | null;
 
 	let fileInput: HTMLInputElement;
 
 	$effect(() => {
-		fetchData();
+		fetchUsage();
+		fetchList();
+
 		return () => clearTimer();
 	});
 
@@ -62,7 +72,8 @@
 			prompt = '';
 			toast('Successfully generated');
 			handleClearFile();
-			fetchData(false);
+			fetchList(false);
+			fetchUsage();
 		} catch (error: any) {
 			toast(error?.message);
 		} finally {
@@ -77,11 +88,11 @@
 		}
 	}
 
-	async function fetchData(isLoading = true) {
+	async function fetchList(isLoading = true) {
 		try {
 			clearTimer();
 			if (isLoading) loading = true;
-			const res = await get('/api/generations?limit=30');
+			const res = await get('/api/generations?limit=10');
 			list = res?.data ?? [];
 			checkNoCompletion();
 		} catch (error: any) {
@@ -89,6 +100,12 @@
 		} finally {
 			loading = false;
 		}
+	}
+
+	function fetchUsage() {
+		get('/api/generations/usage').then((res) => {
+			usage = res.data;
+		});
 	}
 
 	async function clearTimer() {
@@ -102,7 +119,7 @@
 		const noCompletion = list.some((item) => item.state !== 'completed');
 		if (noCompletion) {
 			timer = setTimeout(() => {
-				fetchData(false);
+				fetchList(false);
 			}, 10 * 1000);
 		} else {
 			clearTimer();
@@ -241,15 +258,23 @@
 				{/if}
 			</div>
 			<div class="mt-2 flex gap-2 px-5 text-zinc-400">
-				<button class="hover:text-zinc-700" onclick={handleRandomIdea} title="随机">
-					<RotateCw class="h-4 w-4" />
-				</button>
-				<div class="flex items-center gap-1 truncate text-sm">
-					<b>灵感:</b>
-					<button class="flex-1 hover:text-zinc-700" onclick={() => (prompt = idea)}>
-						{idea}
+				<div class="flex flex-1 gap-2 overflow-hidden">
+					<button class="hover:text-zinc-700" onclick={handleRandomIdea} title="随机">
+						<RotateCw class="h-4 w-4" />
 					</button>
+					<div class="flex min-w-0 items-center gap-1 text-sm">
+						<b>灵感:</b>
+						<button class="flex-1 truncate hover:text-zinc-700" onclick={() => (prompt = idea)}>
+							{idea}
+						</button>
+					</div>
 				</div>
+				{#if usage}
+					<div class="flex items-center gap-1">
+						<span>已用:</span>
+						<span>{usage?.available}/{usage?.capacity}</span>
+					</div>
+				{/if}
 			</div>
 		</div>
 		<div class="">
@@ -269,6 +294,9 @@
 					{#each list as item}
 						<Card data={item} />
 					{/each}
+				</div>
+				<div class="flex justify-center py-4">
+					<Button variant="ghost" href="/all">更多</Button>
 				</div>
 			{:else}
 				<Empty />

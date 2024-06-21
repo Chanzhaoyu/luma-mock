@@ -19,10 +19,6 @@
 		if (localSetting) setting = { ...localSetting };
 	}
 
-	function handleOpen() {
-		open = true;
-	}
-
 	function handleSave() {
 		LS.set('luma_setting', setting);
 		open = false;
@@ -30,19 +26,19 @@
 	}
 </script>
 
-<Button variant="ghost" onclick={handleOpen}>
+<Button size="sm" variant="ghost" onclick={() => (open = true)}>
 	<Settings class="h-4 w-4" />
 </Button>
 
-<Dialog.Root {open}>
+<Dialog.Root {open} onOpenChange={(value) => (open = value)}>
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>设置</Dialog.Title>
 		</Dialog.Header>
-		<div class="grid gap-4 py-4">
-			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="secret" class="text-right">密钥</Label>
-				<Input id="secret" bind:value={setting.secret_key} class="col-span-3" />
+		<div class="py-4">
+			<div class="flex items-center gap-4">
+				<Label for="setting-secret">密钥</Label>
+				<Input id="setting-secret" bind:value={setting.secret_key} class="flex-1" />
 			</div>
 		</div>
 		<Dialog.Footer>

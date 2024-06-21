@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
-	import { Loader2, ArrowLeft } from 'lucide-svelte/icons';
+	import { Loader2, ArrowLeft, Copy } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
-	import { timeAgo } from '$lib/utils';
+	import { timeAgo, onCopy } from '$lib/utils';
 	import { page } from '$app/stores';
 	import { Badge } from '$lib/components/ui/badge';
 
@@ -25,6 +25,17 @@
 		} finally {
 			loading = false;
 		}
+	};
+
+	let copied = $state(false);
+
+	const handleCopy = () => {
+		if (!creation?.prompt) return;
+		onCopy(creation.prompt);
+		copied = true;
+		setTimeout(() => {
+			copied = false;
+		}, 1000);
 	};
 
 	fetchData();
@@ -61,6 +72,10 @@
 				<p>
 					<Badge>{timeAgo(creation?.created_at)}</Badge>
 				</p>
+				<Button class="rounded-[20px]" variant="outline" size="sm" onclick={handleCopy}>
+					<Copy class="mr-2 h-4 w-4" />
+					{copied ? '已复制' : '复制提示词'}
+				</Button>
 			</div>
 		{/if}
 	</div>
