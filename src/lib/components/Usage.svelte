@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Loader } from 'lucide-svelte/icons';
 	import { get } from '$lib/request';
+	import { toast } from 'svelte-sonner';
 
 	interface Usage {
 		available: number;
@@ -17,6 +18,8 @@
 			loading = true;
 			const { data } = await get('/api/generations/usage');
 			usage = data;
+		} catch (error: any) {
+			toast(error?.message);
 		} finally {
 			loading = false;
 		}

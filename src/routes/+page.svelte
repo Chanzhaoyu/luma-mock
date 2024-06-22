@@ -78,6 +78,8 @@
 			const res = await get('/api/generations?limit=10');
 			list = res?.data ?? [];
 			checkNoCompletion();
+		} catch (error: any) {
+			toast(error?.message);
 		} finally {
 			loading = false;
 		}
