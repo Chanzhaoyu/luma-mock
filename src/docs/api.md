@@ -4,7 +4,7 @@ description: RESTFul 风格的 API 接口文档
 ---
 
 <script>
-  import Endpoint from '../lib/components/endpoints.svelte';
+  import Endpoint from '../lib/components/Endpoints.svelte';
 </script>
 
 ## 接口
