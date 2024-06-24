@@ -139,7 +139,7 @@ description: RESTFul 风格的 API 接口文档
 // 参数
 {
 	"prompt": "A kitten in motion",
-	"image": "" // 可选，上传接口返回
+	"image": "" // 可选
 }
 ```
 
