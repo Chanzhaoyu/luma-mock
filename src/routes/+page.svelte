@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
+
 	import { Image, Loader2, ExternalLink, X } from 'lucide-svelte/icons';
 	import { toast } from 'svelte-sonner';
 	import { isNonEmptyString } from '$lib/is';
@@ -165,7 +167,7 @@
 			<div class="relative">
 				<Input
 					bind:value={prompt}
-					className={cn('pl-16', uploadFile.blob && 'pt-10')}
+					className={cn('pl-16 transition-all ', uploadFile.blob && 'pt-10')}
 					loading={generateLoading}
 					placeholder="输入文字或添加图片..."
 					onkeypress={handleEnter}
@@ -176,6 +178,7 @@
 					<div
 						class="group absolute left-[25px] top-[-55px] aspect-[1/1.3] h-[100px] overflow-hidden rounded-xl"
 						style="transform: translateY(0px) scale(1) rotate(-3deg) translateZ(0px); opacity: 1;"
+						transition:fade={{ duration: 200 }}
 					>
 						<button
 							class="absolute right-0 top-0 z-20 flex h-5 w-5 rounded-full bg-black opacity-0 transition-opacity group-hover:opacity-100"
