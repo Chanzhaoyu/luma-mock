@@ -1,4 +1,5 @@
 <script lang="ts">
+	import API from './API.svelte';
 	import Theme from './Theme.svelte';
 	import SettingModal from './Setting.svelte';
 	import Github from './Github.svelte';
@@ -16,6 +17,7 @@
 		</div>
 		<div class="flex-1"></div>
 		<div class="flex items-center space-x-2">
+			<API />
 			<Theme />
 			<SettingModal />
 			<Github />

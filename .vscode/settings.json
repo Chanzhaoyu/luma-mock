@@ -4,7 +4,10 @@
     "clsx",
     "lucide",
     "luma",
+    "mdsvex",
+    "shiki",
     "sonner",
-    "tailwindcss"
+    "tailwindcss",
+    "vitesse"
   ]
 }
