@@ -11,7 +11,7 @@
 </svelte:head>
 
 <section
-	class="bg-white bg-[url('/images/hero-pattern_light.svg')] dark:bg-neutral-900 dark:bg-[url('/images/hero-pattern_dark.svg')]"
+	class="bg-white bg-[url('/images/hero-pattern_light.svg')] dark:bg-slate-900 dark:bg-[url('/images/hero-pattern_dark.svg')]"
 >
 	<div class="relative z-10 mx-auto max-w-screen-xl px-4 py-8 text-center lg:py-20">
 		<div class="flex items-center justify-center space-x-4 text-center">

@@ -150,6 +150,7 @@ description: RESTFul 风格的 API 接口文档
 ```bash
 /api/generations/upload
 ```
+
 <p></p>
 
 ```json
@@ -170,4 +171,14 @@ file: (二进制)
 }
 ```
 
+</Endpoint>
+
+## 鉴权
+
+<Endpoint title="请求密钥" description="接口请求鉴权">
+
+```json
+// 在请求头中添加
+Secret-Key: ****
+```
 </Endpoint>
