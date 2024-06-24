@@ -175,10 +175,11 @@ file: (二进制)
 
 ## 鉴权
 
-<Endpoint title="请求密钥" description="接口请求鉴权">
+<Endpoint title="请求密钥" description="接口请求鉴权，生成和上传图片接口支持">
 
 ```json
 // 在请求头中添加
 Secret-Key: ****
 ```
+
 </Endpoint>

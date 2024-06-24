@@ -4,14 +4,16 @@ const defaultAPIUrl = 'https://internal-api.virginia.labs.lumalabs.ai';
 
 export type Config = {
 	ACCESS_TOKEN?: string;
-	PROXY_URL?: string;
+	PROXY_URL: string;
 	SECRET_KEY?: string;
+	ALLOW_ORIGIN: string;
 };
 
 export const config: Config = {
 	ACCESS_TOKEN: getEnvVariable('ACCESS_TOKEN'),
 	PROXY_URL: getEnvVariable('PROXY_URL') || defaultAPIUrl,
-	SECRET_KEY: getEnvVariable('SECRET_KEY')
+	SECRET_KEY: getEnvVariable('SECRET_KEY'),
+	ALLOW_ORIGIN: getEnvVariable('ALLOW_ORIGIN') || '*'
 };
 
 export function getEnvVariable(key: string): string | undefined {

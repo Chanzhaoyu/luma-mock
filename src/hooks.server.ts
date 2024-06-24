@@ -6,6 +6,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const endpoint: string[] = ['/api/generations/create', '/api/generations/upload'];
 	const pathname = event.url.pathname;
 
+	// Check if the request is for the endpoint
 	if (isNonEmptyString(config.SECRET_KEY)) {
 		if (endpoint.includes(pathname)) {
 			const secretKey = event.request.headers.get('secret-key');
@@ -21,5 +22,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	const response = await resolve(event);
+
+	//  CORS
+	response.headers.set('Access-Control-Allow-Origin', config.ALLOW_ORIGIN);
+	response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+	response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
 	return response;
 };
