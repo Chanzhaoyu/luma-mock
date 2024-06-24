@@ -1,6 +1,6 @@
 # Luma Mock
 
-使用 `Luma` 官网 `API` 运行的可部署网页项目。[预览](https://luma-mock-delta.vercel.app/)
+使用 `Luma` 官网 `API` 运行的可部署网页项目，支持 `API` 方式调用。[预览](https://luma-mock-delta.vercel.app/)
 
 ![Luma Mock](/doc/cover.jpg)
 
