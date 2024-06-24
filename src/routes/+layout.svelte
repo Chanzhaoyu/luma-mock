@@ -1,17 +1,13 @@
 <script lang="ts">
 	import '../app.css';
-
-	import type { Snippet } from 'svelte';
+	import { setContext, type Snippet } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import Header from '$lib/components/Header.svelte';
 	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
-	import { browser } from '$app/environment';
 
 	const { children, data }: { children: Snippet; data: { prepare: Prepare } } = $props();
 
-	if (browser) {
-		localStorage.setItem('luma_prepare', JSON.stringify(data.prepare));
-	}
+	setContext('contextProvider', { prepare: data.prepare });
 </script>
 
 <svelte:head>

@@ -1,5 +1,12 @@
 type Theme = 'system' | 'light' | 'dark';
 
+interface ContextProvider {
+	prepare: {
+		ACCESS_TOKEN: boolean;
+		SECRET_KEY: boolean;
+	};
+}
+
 interface Prepare {
 	ACCESS_TOKEN: boolean;
 	SECRET_KEY: boolean;

@@ -1,20 +1,10 @@
 <script lang="ts">
+	import themeStore from '$lib/stores/theme';
 	import { Moon, Sun, LaptopMinimal } from 'lucide-svelte/icons';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
 
 	const themes = ['light', 'dark', 'system'];
-
-	let currentTheme = $state();
-
-	const handleColorSchemeChange = (event: any) => {
-		if (currentTheme !== 'system') return;
-		if (event.matches) {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
-	};
 
 	const handleChangeTheme = (theme: Theme) => {
 		if (theme === 'system' || theme === 'light') {
@@ -22,31 +12,40 @@
 		} else {
 			document.documentElement.classList.add('dark');
 		}
-		currentTheme = theme;
-		localStorage.setItem('theme', theme);
+		themeStore.update(() => theme);
+	};
+
+	const handleColorSchemeChange = (event: any) => {
+		if ($themeStore !== 'system') return;
+		if (event.matches) {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
 	};
 
 	$effect(() => {
-		const localTheme = localStorage.getItem('theme') as Theme;
-		currentTheme = localTheme ?? 'system';
+		window
+			.matchMedia('(prefers-color-scheme: dark)')
+			.addEventListener('change', handleColorSchemeChange);
 
-		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-		mediaQuery.addEventListener('change', handleColorSchemeChange);
-
-		return () => mediaQuery.removeEventListener('change', handleColorSchemeChange);
+		return () =>
+			window
+				.matchMedia('(prefers-color-scheme: dark)')
+				.removeEventListener('change', handleColorSchemeChange);
 	});
 </script>
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger>
 		<Button size="sm" variant="ghost">
-			{#if currentTheme === 'system'}
+			{#if $themeStore === 'system'}
 				<LaptopMinimal class="h-4 w-4" />
 			{/if}
-			{#if currentTheme === 'light'}
+			{#if $themeStore === 'light'}
 				<Sun class="h-4 w-4" />
 			{/if}
-			{#if currentTheme === 'dark'}
+			{#if $themeStore === 'dark'}
 				<Moon class="h-4 w-4" />
 			{/if}
 		</Button>
