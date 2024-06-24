@@ -49,7 +49,7 @@
 				<track kind="captions" src={data.video?.url} />
 			</video>
 		{:else}
-			<div class="flex aspect-video overflow-hidden rounded-md bg-zinc-100">
+			<div class="flex aspect-video overflow-hidden rounded-md bg-slate-100 dark:bg-slate-900">
 				<div class="m-auto text-center">
 					{#if data.state !== 'failed'}
 						<Loader2 class="inline-block h-5 w-5 animate-spin" />
