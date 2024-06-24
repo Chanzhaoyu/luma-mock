@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { ModeWatcher } from 'mode-watcher';
 	import { setContext, type Snippet } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import Header from '$lib/components/Header.svelte';
@@ -13,6 +14,8 @@
 <svelte:head>
 	<title>Luma Mock</title>
 </svelte:head>
+
+<ModeWatcher />
 
 <div class="relative flex min-h-screen flex-col">
 	<Header></Header>
