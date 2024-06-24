@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
-	import { Download, Loader2, Blend } from 'lucide-svelte/icons';
+	import { Download, Loader2, Blend, AlertCircle } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import { onDownload, timeAgo } from '$lib/utils';
@@ -51,8 +51,13 @@
 		{:else}
 			<div class="flex aspect-video overflow-hidden rounded-md bg-zinc-100">
 				<div class="m-auto text-center">
-					<Loader2 class="inline-block h-5 w-5 animate-spin" />
-					<p class="mt-2">{data.state}</p>
+					{#if data.state !== 'failed'}
+						<Loader2 class="inline-block h-5 w-5 animate-spin" />
+						<p class="mt-2">{data.state}</p>
+					{:else}
+						<AlertCircle class="inline-block h-5 w-5" />
+						<p class="mt-2">Generation Failed, please try again</p>
+					{/if}
 				</div>
 			</div>
 		{/if}
