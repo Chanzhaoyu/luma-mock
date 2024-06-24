@@ -48,7 +48,7 @@
 	let usageRef: ReturnType<typeof UsageComponent>;
 
 	async function handleGenerate() {
-		if (!isNonEmptyString(prompt) || loading) return;
+		if (!isNonEmptyString(prompt) || generateLoading) return;
 		try {
 			generateLoading = true;
 			const payload: Record<string, string> = { prompt: prompt.trim() };
