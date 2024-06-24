@@ -52,7 +52,7 @@
 		try {
 			generateLoading = true;
 			const payload: Record<string, string> = { prompt: prompt.trim() };
-			if (uploadFile.url) payload['image'] = uploadFile.url;
+			if (uploadFile.url) payload['image'] = uploadFile.blob as string;
 			await post('/api/generations/create', { body: payload });
 			prompt = '';
 			toast('Successfully generated');
