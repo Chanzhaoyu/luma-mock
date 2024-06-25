@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 
-	import { Image, Loader2, ExternalLink, X } from 'lucide-svelte/icons';
+	import { Image, Loader2, ExternalLink, X, Link, Upload } from 'lucide-svelte/icons';
 	import { toast } from 'svelte-sonner';
 	import { isNonEmptyString } from '$lib/is';
 	import { cn } from '$lib/utils';
@@ -9,24 +9,28 @@
 	import { ideas } from '$lib/constant/idea';
 
 	import { Button } from '$lib/components/ui/button';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import Card from '$lib/components/Card.svelte';
 	import Empty from '$lib/components/Empty.svelte';
 	import IdeaComponent from '$lib/components/Idea.svelte';
 	import UsageComponent from '$lib/components/Usage.svelte';
 	import Input from '$lib/components/Input.svelte';
+	import UploadDialog from '~/lib/components/UploadDialog.svelte';
 
 	interface UploadFileProps {
 		process: boolean;
 		error: boolean;
 		url: string | null;
 		blob: string | null;
+		internet: boolean;
 	}
 
 	const defaultUploadFile = (): UploadFileProps => ({
 		process: false,
 		error: false,
 		url: null,
-		blob: null
+		blob: null,
+		internet: false
 	});
 
 	let prompt = $state('');
@@ -38,6 +42,10 @@
 	let generateLoading = $state(false);
 
 	let uploadFile = $state<UploadFileProps>(defaultUploadFile());
+
+	let uploadFileInternet = $state(false);
+
+	let hasUploadFile = $derived.by(() => uploadFile.url || uploadFile.blob);
 
 	let list = $state<Creations[]>([]);
 
@@ -109,6 +117,12 @@
 		fileInput?.click();
 	}
 
+	function handleUploadFileInternetConfirm(url: string) {
+		uploadFile.url = url;
+		uploadFile.internet = true;
+		uploadFileInternet = false;
+	}
+
 	function handleClearFile() {
 		uploadFile = defaultUploadFile();
 		fileInput?.setAttribute('value', '');
@@ -129,6 +143,7 @@
 			uploadFile.process = true;
 			const res = await post<{ data: UploadFile }>('/api/generations/upload', { body: formData });
 			uploadFile.url = res.data.public_url;
+			uploadFile.internet = false;
 		} catch (error: any) {
 			toast(error?.message);
 		} finally {
@@ -143,38 +158,20 @@
 	});
 </script>
 
-{#snippet prefix()}
-	<button
-		tabindex="0"
-		class="flex h-14 w-14 cursor-pointer items-center justify-center text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
-		disabled={uploadFile.process}
-		onclick={handleUpload}
-	>
-		<input
-			accept="image/*"
-			class="hidden"
-			type="file"
-			bind:this={fileInput}
-			onchange={onFileInputChange}
-		/>
-		<Image class="h-5 w-5" />
-	</button>
-{/snippet}
-
 <div class="py-10">
 	<div class="container m-auto">
 		<div class="pb-20 pt-10">
 			<div class="relative">
 				<Input
 					bind:value={prompt}
-					className={cn('pl-16 transition-all ', uploadFile.blob && 'pt-10')}
+					className={cn('pl-16 transition-all ', hasUploadFile && 'pt-10')}
 					loading={generateLoading}
 					placeholder="输入文字或添加图片..."
 					onkeypress={handleEnter}
 					onSubmit={handleGenerate}
 					{prefix}
 				/>
-				{#if uploadFile.blob}
+				{#if hasUploadFile}
 					<div
 						class="group absolute left-[25px] top-[-55px] aspect-[1/1.3] h-[100px] overflow-hidden rounded-xl"
 						style="transform: translateY(0px) scale(1) rotate(-3deg) translateZ(0px); opacity: 1;"
@@ -189,7 +186,7 @@
 						</button>
 						<img
 							class="size-full bg-zinc-200 object-cover"
-							src={uploadFile?.blob}
+							src={uploadFile?.blob ?? uploadFile.url}
 							alt="attachment"
 							style="box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 12px 0px;"
 						/>
@@ -242,3 +239,38 @@
 		</div>
 	</div>
 </div>
+
+<UploadDialog open={uploadFileInternet} onConfirm={handleUploadFileInternetConfirm} />
+
+{#snippet prefix()}
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger>
+			<button
+				tabindex="0"
+				class="flex h-14 w-14 cursor-pointer items-center justify-center text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100"
+				disabled={uploadFile.process}
+			>
+				<input
+					accept="image/*"
+					class="hidden"
+					type="file"
+					bind:this={fileInput}
+					onchange={onFileInputChange}
+				/>
+				<Image class="h-5 w-5" />
+			</button>
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content>
+			<DropdownMenu.Group>
+				<DropdownMenu.Item onclick={handleUpload}>
+					<Upload class="mr-2 h-4 w-4"></Upload>
+					本地上传
+				</DropdownMenu.Item>
+				<DropdownMenu.Item onclick={() => (uploadFileInternet = true)}>
+					<Link class="mr-2 h-4 w-4"></Link>
+					网络图片（推荐）
+				</DropdownMenu.Item>
+			</DropdownMenu.Group>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+{/snippet}

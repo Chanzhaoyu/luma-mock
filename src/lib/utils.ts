@@ -66,6 +66,10 @@ export const onDownload = (url: string, filename: string) => {
 	document.body.removeChild(a);
 };
 
+/**
+ * Copy the given text to clipboard
+ * @param text 
+ */
 export const onCopy = (text: string) => {
 	if (navigator && 'clipboard' in navigator) {
 		navigator.clipboard.writeText(text);
@@ -81,7 +85,24 @@ export const onCopy = (text: string) => {
 	}
 };
 
+/**
+ * Convert the given date to time ago format
+ * @param date 
+ * @returns 
+ */
 export const timeAgo = (date?: Date | string) => {
 	if (!date) return '';
 	return formatDistanceToNow(new Date(date), { addSuffix: true });
+};
+
+/**
+ * Check if the given string is an image URL
+ * @param url 
+ * @returns 
+ */
+export const isImageUrl = (url: string) => {
+	if (typeof url !== 'string') return false;
+	if (!url.startsWith('http') || !url.startsWith('https')) return false;
+	const imagePattern = /\.(jpeg|jpg|gif|png|webp|bmp)$/i;
+	return imagePattern.test(url);
 };
