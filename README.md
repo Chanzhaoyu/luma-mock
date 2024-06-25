@@ -8,10 +8,10 @@
 
 | 变量名称       | 是否必填 | 描述                          |
 | -------------- | -------- | ----------------------------- |
-| `ACCESS_TOKEN` | 必填     | access_token                  |
+| `ACCESS_TOKEN` | 必填     | `access_token`                |
 | `PROXY_URL`    | 可选     | 代理接口                      |
 | `SECRET_KEY`   | 可选     | 访问密钥                      |
-| `ALLOW_ORIGIN` | 可选     | 跨域限制，多个用地址 `,` 隔开 |
+| `ALLOW_ORIGIN` | 可选     | 跨域限制，多个地址用 `,` 隔开 |
 
 ## 运行项目
 
@@ -19,7 +19,7 @@
 
 1：复制根目录下 `.env.example` 重命名 `.env`
 
-2：登录 [Luma](https://lumalabs.ai/) 并获取 `access_token` 填入 `.env` 文件中的 `ACCESS_TOKEN` 字段
+2：登录 [Luma](https://lumalabs.ai/) 随便进行一次操作，从控制台`网络`选项卡中获取 `access_token` 并填入 `.env` 文件中的 `ACCESS_TOKEN` 字段
 
 ![Access Token](/doc/access_token.png)
 
