@@ -11,19 +11,26 @@
 		onConfirm?: (value: string) => void;
 	}
 
-	let { open, onConfirm }: Props = $props();
+	let { open = $bindable(), onConfirm }: Props = $props();
 
 	let value = $state('');
 
+	const handleOpenChange = () => {
+		if (open) value = '';
+		open = !open;
+	};
+
 	const handleConfirm = () => {
-		if (!isNonEmptyString(value)) return toast('请输入图片链接');
-		if (!isImageUrl(value)) return toast('请输入正确的图片链接');
+		if (!isNonEmptyString(value) || !isImageUrl(value)) {
+			return toast('请输入正确的图片链接');
+		}
 		onConfirm?.(value.trim());
+		value = '';
 		open = false;
 	};
 </script>
 
-<Dialog.Root {open} onOpenChange={(value) => (open = value)}>
+<Dialog.Root {open} onOpenChange={handleOpenChange}>
 	<Dialog.Content>
 		<Dialog.Header>
 			<Dialog.Title>网络图片</Dialog.Title>

@@ -240,7 +240,7 @@
 	</div>
 </div>
 
-<UploadDialog open={uploadFileInternet} onConfirm={handleUploadFileInternetConfirm} />
+<UploadDialog bind:open={uploadFileInternet} onConfirm={handleUploadFileInternetConfirm} />
 
 {#snippet prefix()}
 	<DropdownMenu.Root>
