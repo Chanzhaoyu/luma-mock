@@ -11,13 +11,13 @@
 | `ACCESS_TOKEN` | 必填     | access_token                  |
 | `PROXY_URL`    | 可选     | 代理接口                      |
 | `SECRET_KEY`   | 可选     | 访问密钥                      |
-| `ALLOW_ORIGIN` | 可选     | 跨域限制，多个用站点 `,` 隔开 |
+| `ALLOW_ORIGIN` | 可选     | 跨域限制，多个用地址 `,` 隔开 |
 
 ## 运行项目
 
 ### 前置操作
 
-1：复制根目录 `.env.example` 重命名 `.env`
+1：复制根目录下 `.env.example` 重命名 `.env`
 
 2：登录 [Luma](https://lumalabs.ai/) 并获取 `access_token` 填入 `.env` 文件中的 `ACCESS_TOKEN` 字段
 
