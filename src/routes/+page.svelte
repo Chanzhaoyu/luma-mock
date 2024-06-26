@@ -164,7 +164,7 @@
 			<div class="relative">
 				<Input
 					bind:value={prompt}
-					className={cn('pl-16 transition-all ', hasUploadFile && 'pt-10')}
+					class={cn('pl-16 transition-all ', hasUploadFile && 'pt-10')}
 					loading={generateLoading}
 					placeholder="输入文字或添加图片..."
 					onkeypress={handleEnter}

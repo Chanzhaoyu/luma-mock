@@ -8,7 +8,7 @@
 		value: string;
 		loading?: boolean;
 		placeholder?: string;
-		className?: string;
+		class?: string;
 		prefix?: Snippet;
 		onSubmit?: () => void;
 		[key: string]: any;
@@ -18,7 +18,7 @@
 		value = $bindable(),
 		loading = false,
 		placeholder = '请输入...',
-		className = '',
+		class: className = '',
 		prefix,
 		onSubmit,
 		...rest
